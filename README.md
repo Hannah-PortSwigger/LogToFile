@@ -1,4 +1,4 @@
-# BurpEnterpriseLogging
+# Log to File
 For Burp Suite Enterprise Edition
 
 Please note that extensions are written by third party users of Burp, and PortSwigger makes no warranty about their quality or usefulness for any particular purpose.
@@ -14,7 +14,7 @@ The filename of the scan will be the start time of the scan, in the format `log-
 - This extension assumes you are using a Standard install. This has not been tested on a Cloud deployment.
 
 ## Usage
-1. Download this repository, and check the `folderPath` variable in `BurpExtender.java` is pointed to a location where you have write permission **on the Scanning Machine**.
+1. Download this repository, and check the `folderPath` variable in `BurpExtender.java` is pointed to a location where you have write permission **on the Scanning Machine**. Configure your `logRequests` and `logResponses` variables to `true` or `false`, according to whether you would like to log all requests, all responses, or both.
 2. Build the extension using `gradle fatJar`. Please compile using Java 11.
 3. [Load the extension into Burp Enterprise](https://portswigger.net/burp/documentation/enterprise/working/scans/extensions), and add the extension to your Site Details page.
 4. Run a scan as normal.
