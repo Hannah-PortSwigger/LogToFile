@@ -20,12 +20,12 @@ The filename of the scan will be the start time of the scan, in the format `log-
 4. Run a scan as normal.
 5. Retrieve your file from your Scanning Machine - it will be located according to the `folderPath` that is set. If in doubt, the file location and name will be output in the Scan log.
 
-### Troubleshooting
+## Troubleshooting
 If the logging file has not been generated, check your scan log for any exceptions - Scan > Reporting & logs > Scan debug log.
 
 If you have received a `FileNotFoundException (Permission denied)`, then make sure that you are writing your report to a location where you have write permission.
 
-#### Using Gradle
+### Using Gradle
 - If you do not have Gradle already installed, follow the installation instructions [here](https://gradle.org/install/).
 - Once Gradle is installed, run `gradle fatJar` from the installation directory using the command line.
 - Make sure you are using the latest version of Gradle.
