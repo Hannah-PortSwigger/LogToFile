@@ -1,9 +1,11 @@
 package burp;
 
-import java.io.*;
-
-import java.time.format.DateTimeFormatter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class BurpExtender implements IBurpExtender, IHttpListener {
     private IBurpExtenderCallbacks callbacks;
@@ -18,7 +20,7 @@ public class BurpExtender implements IBurpExtender, IHttpListener {
     private String folderPath = "/var/log/BurpSuiteEnterpriseEdition/";     // Mac/Linux format
 //    private String folderPath = "C:\\Users\\MyName\\";                    // Windows format
     private boolean logRequests = true;
-    private boolean logResponses = false;
+    private boolean logResponses = true;
 
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks)
