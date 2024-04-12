@@ -5,6 +5,7 @@ import burp.api.montoya.http.handler.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 public class MyHttpHandler implements HttpHandler
 {
@@ -38,11 +39,11 @@ public class MyHttpHandler implements HttpHandler
         return ResponseReceivedAction.continueWith(httpResponseReceived);
     }
 
-    private void logToFile(String message) // TODO better file writing strategy
+    private void logToFile(String message)
     {
         try
         {
-            Files.writeString(filePath, message);
+            Files.writeString(filePath, message, StandardOpenOption.APPEND);
         }
         catch (IOException e)
         {

@@ -2,8 +2,6 @@ package burp;
 
 import burp.api.montoya.logging.Logging;
 
-import java.io.IOException;
-
 public class Logger
 {
     private final Logging logging;
