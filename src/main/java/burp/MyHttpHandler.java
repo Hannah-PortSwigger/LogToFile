@@ -1,29 +1,23 @@
 package burp;
 
 import burp.api.montoya.http.handler.*;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import burp.api.montoya.logging.Logging;
 
 public class MyHttpHandler implements HttpHandler
 {
-    private final Logger logger;
+    private final Logging logging;
     private final boolean logResponses;
-    private final Path filePath;
 
-    public MyHttpHandler(Logger logger, boolean logResponses, Path filePath)
+    public MyHttpHandler(Logging logging, boolean logResponses)
     {
-        this.logger = logger;
+        this.logging = logging;
         this.logResponses = logResponses;
-        this.filePath = filePath;
     }
 
     @Override
     public RequestToBeSentAction handleHttpRequestToBeSent(HttpRequestToBeSent httpRequestToBeSent)
     {
-        logToFile(httpRequestToBeSent.toString());
+        logging.logToOutput("REQUEST:\n" + httpRequestToBeSent.toString());
 
         return RequestToBeSentAction.continueWith(httpRequestToBeSent);
     }
@@ -33,21 +27,9 @@ public class MyHttpHandler implements HttpHandler
     {
         if (logResponses)
         {
-            logToFile(httpResponseReceived.toString());
+            logging.logToOutput("RESPONSE:\n" + httpResponseReceived.toString());
         }
 
         return ResponseReceivedAction.continueWith(httpResponseReceived);
-    }
-
-    private void logToFile(String message)
-    {
-        try
-        {
-            Files.writeString(filePath, message, StandardOpenOption.APPEND);
-        }
-        catch (IOException e)
-        {
-            logger.logError("Failed to write to file", e);
-        }
     }
 }
