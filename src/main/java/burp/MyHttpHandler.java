@@ -2,28 +2,29 @@ package burp;
 
 import burp.api.montoya.http.handler.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MyHttpHandler implements HttpHandler
 {
     private final Logger logger;
     private final boolean logResponses;
-    private final Path filePath;
+    private final LinkedBlockingQueue<String> queue;
 
-    public MyHttpHandler(Logger logger, boolean logResponses, Path filePath)
+    public MyHttpHandler(
+            Logger logger,
+            boolean logResponses,
+            LinkedBlockingQueue<String> queue
+    )
     {
         this.logger = logger;
         this.logResponses = logResponses;
-        this.filePath = filePath;
+        this.queue = queue;
     }
 
     @Override
     public RequestToBeSentAction handleHttpRequestToBeSent(HttpRequestToBeSent httpRequestToBeSent)
     {
-        logToFile(httpRequestToBeSent.toString());
+        log(httpRequestToBeSent.toString());
 
         return RequestToBeSentAction.continueWith(httpRequestToBeSent);
     }
@@ -33,21 +34,21 @@ public class MyHttpHandler implements HttpHandler
     {
         if (logResponses)
         {
-            logToFile(httpResponseReceived.toString());
+            log(httpResponseReceived.toString());
         }
 
         return ResponseReceivedAction.continueWith(httpResponseReceived);
     }
 
-    private void logToFile(String message)
+    private void log(String message)
     {
         try
         {
-            Files.writeString(filePath, message, StandardOpenOption.APPEND);
+            queue.add(message);
         }
-        catch (IOException e)
+        catch (IllegalStateException e)
         {
-            logger.logError("Failed to write to file", e);
+            logger.logError("Failed to add message to queue", e);
         }
     }
 }

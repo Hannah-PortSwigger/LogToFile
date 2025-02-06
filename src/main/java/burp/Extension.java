@@ -3,17 +3,16 @@ package burp;
 import burp.api.montoya.BurpExtension;
 import burp.api.montoya.MontoyaApi;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static java.time.ZoneId.systemDefault;
 
 public class Extension implements BurpExtension
 {
-    private final String folderPath = "/var/log/BurpSuiteEnterpriseEdition/";   // CHANGE ME
+    private final String folderPath = "/Users/hannah.law/Downloads/";   // CHANGE ME
     private final boolean logResponses = true;                                  // CHANGE ME
 
     public static final String EXTENSION_NAME = "Log to File";
@@ -28,18 +27,15 @@ public class Extension implements BurpExtension
         logger.logOutput("Loaded");
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm").withZone(systemDefault());
+        Path filePath = Path.of(folderPath, "logging-file-" + dateTimeFormatter.format(instant) + ".txt");
 
-        Path filePath = Path.of(folderPath + "logging-file-" + dateTimeFormatter.format(instant) + ".txt");
+        LinkedBlockingQueue<String> toWriteToFileQueue = new LinkedBlockingQueue<>();
 
-        try
-        {
-            Files.createFile(filePath);
-            logger.logOutput("File created at " + filePath);
-            montoyaApi.http().registerHttpHandler(new MyHttpHandler(logger, logResponses, filePath));
-        }
-        catch (IOException e)
-        {
-            logger.logError("Failed to create file", e);
-        }
+        Thread fileWritingThread = new Thread(new WriteFileFromQueue(logger, filePath, toWriteToFileQueue));
+        fileWritingThread.start();
+        logger.logOutput(fileWritingThread.getState().name());
+
+        montoyaApi.http().registerHttpHandler(new MyHttpHandler(logger, logResponses, toWriteToFileQueue));
+        montoyaApi.extension().registerUnloadingHandler(fileWritingThread::interrupt);
     }
 }
