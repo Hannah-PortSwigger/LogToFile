@@ -27,7 +27,7 @@ public class MyHttpHandler implements HttpHandler
     {
         if (logResponses)
         {
-            logging.logToOutput("RESPONSE " + httpResponseReceived.messageId() + ":\n" + httpResponseReceived);
+            logging.logToOutput("RESPONSE " + httpResponseReceived.messageId() + " content-length: " + httpResponseReceived.headerValue("Content-Length"));
         }
 
         return ResponseReceivedAction.continueWith(httpResponseReceived);
