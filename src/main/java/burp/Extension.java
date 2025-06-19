@@ -5,6 +5,7 @@ import burp.api.montoya.MontoyaApi;
 
 import java.time.Instant;
 
+@SuppressWarnings("unused")
 public class Extension implements BurpExtension
 {
     private final boolean logResponses = true;                                  // CHANGE ME
