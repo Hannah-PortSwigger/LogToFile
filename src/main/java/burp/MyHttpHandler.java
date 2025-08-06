@@ -17,7 +17,7 @@ public class MyHttpHandler implements HttpHandler
     @Override
     public RequestToBeSentAction handleHttpRequestToBeSent(HttpRequestToBeSent httpRequestToBeSent)
     {
-        logging.logToOutput("REQUEST:\n" + httpRequestToBeSent.toString());
+        logging.logToOutput("REQUEST " + httpRequestToBeSent.messageId() + ":\n" + httpRequestToBeSent.toString());
 
         return RequestToBeSentAction.continueWith(httpRequestToBeSent);
     }
@@ -27,7 +27,7 @@ public class MyHttpHandler implements HttpHandler
     {
         if (logResponses)
         {
-            logging.logToOutput("RESPONSE:\n" + httpResponseReceived.toString());
+            logging.logToOutput("RESPONSE " + httpResponseReceived.messageId() + ":\n" + httpResponseReceived.toString());
         }
 
         return ResponseReceivedAction.continueWith(httpResponseReceived);
